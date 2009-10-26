@@ -5,14 +5,20 @@ require 'rake/rdoctask'
 require 'rake/gempackagetask'
 require 'rake/contrib/rubyforgepublisher'
 
-
-PKG_VERSION = "0.0.1"
-PKG_NAME = "activeshipping"
-PKG_FILE_NAME = "#{PKG_NAME}-#{PKG_VERSION}"
-
-PKG_FILES = FileList[
-    "lib/**/*", "examples/**/*", "[A-Z]*", "Rakefile"
-].exclude(/\.svn$/)
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gem|
+    gem.name = "active_shipping"
+    gem.summary = %Q{Shipping API extension for Active Merchant.}
+    gem.description = %Q{Shipping API extension for Active Merchant.}
+    gem.email = "jmacaulay@gmail.com"
+    gem.homepage = "http://github.com/Shopify/active_shipping"
+    gem.authors = ["James MacAulay", "Tobias Luetke", "Cody Fauser", "Jimmy Baker"]
+    gem.add_dependency "activesupport"
+  end
+rescue LoadError
+  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
+end
 
 
 desc "Default Task"
