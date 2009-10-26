@@ -30,6 +30,7 @@ module ActiveMerchant
       
       API_CODES = {
         :us_rates => 'RateV3',
+        :track => 'TrackV2',
         :world_rates => 'IntlRate',
         :test => 'CarrierPickupAvailability'
       }
@@ -162,6 +163,13 @@ module ActiveMerchant
         end
       end
       
+      def find_tracking_info(tracking_number, options={})
+        options = @options.update(options)
+        tracking_request = build_tracking_request(tracking_number)
+        response = commit(:track, save_request(tracking_request), (options[:test] || false))
+        parse_tracking_response(response, options)
+      end
+      
       def valid_credentials?
         # Cannot test with find_rates because USPS doesn't allow that in test mode
         test_mode? ? canned_address_verification_works? : super
@@ -192,6 +200,14 @@ module ActiveMerchant
         xml = REXML::Document.new(commit(:test, request, true))
         xml.get_text('/CarrierPickupAvailabilityResponse/City').to_s == 'HOUSTON' &&
         xml.get_text('/CarrierPickupAvailabilityResponse/Address2').to_s == '1390 Market Street'
+      end
+      
+      def build_tracking_request(tracking_numbers)
+        request = XmlNode.new('TrackRequest', :USERID => @options[:login]) do |tracking_request|
+          tracking_numbers.each { |i| tracking_request << XmlNode.new('TrackID', :ID => i)  }
+        end
+        
+        URI.encode(save_request(request.to_s))
       end
       
       # options[:service] --    One of [:first_class, :priority, :express, :bpm, :parcel,
@@ -260,6 +276,35 @@ module ActiveMerchant
         URI.encode(save_request(request.to_s))
       end
       
+      def parse_tracking_response(response, options = {})
+        xml = REXML::Document.new(response)
+        shipment_events = []
+        if success = response_success?(xml)
+          tracking_number = xml.root.elements['TrackInfo'].attributes['ID']
+        end
+
+        TrackingResponse.new(success, response_message(xml), Hash.from_xml(response).values.first,
+          :xml => response,
+          :request => last_request,
+          :shipment_events => shipment_events,
+          :tracking_number => tracking_number
+        )
+      end
+
+      def response_success?(xml)
+        xml.elements['/Error'].nil?
+      end
+
+      def response_message(xml)
+        if error = xml.elements['/Error']
+          message = error.elements['Description'].text
+        else
+          message = ''
+        end
+
+        message
+      end
+
       def parse_rate_response(origin, destination, packages, response, options={})
         success = true
         message = ''
