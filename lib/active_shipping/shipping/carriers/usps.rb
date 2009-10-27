@@ -37,6 +37,7 @@ module ActiveMerchant
       USE_SSL = {
         :us_rates => false,
         :world_rates => false,
+        :track => false,
         :test => true
       }
       CONTAINERS = {
@@ -203,7 +204,7 @@ module ActiveMerchant
       end
       
       def build_tracking_request(tracking_numbers)
-        request = XmlNode.new('TrackRequest', :USERID => @options[:login]) do |tracking_request|
+        request = XmlNode.new('TrackFieldRequest', :USERID => @options[:login]) do |tracking_request|
           tracking_numbers.each { |i| tracking_request << XmlNode.new('TrackID', :ID => i)  }
         end
         
