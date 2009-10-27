@@ -45,6 +45,11 @@ module ActiveMerchant
       
       protected
       
+      def node_string_or_nil(xml_node)
+        text = node_text_or_nil(xml_node)
+        text ? text.to_s : nil
+      end
+      
       def node_text_or_nil(xml_node)
         xml_node ? xml_node.text : nil
       end
