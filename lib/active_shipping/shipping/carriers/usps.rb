@@ -164,9 +164,10 @@ module ActiveMerchant
         end
       end
       
-      def find_tracking_info(tracking_number, options={})
+      def find_tracking_info(tracking_numbers, options={})
         options = @options.update(options)
-        tracking_request = build_tracking_request(tracking_number)
+        tracking_numbers = [tracking_numbers] unless tracking_numbers.is_a?(Array)
+        tracking_request = build_tracking_request(tracking_numbers)
         response = commit(:track, save_request(tracking_request), (options[:test] || false))
         parse_tracking_response(response, options)
       end
@@ -281,37 +282,45 @@ module ActiveMerchant
         xml = REXML::Document.new(response)
         shipment_events = []
         if success = response_success?(xml)
-          tracking_number = xml.root.elements['TrackInfo'].attributes['ID']
+          info = xml.root.get_elements('TrackInfo')
+          unless info.empty?
+            responses = info.map do |i|
+              tracking_number = i.attributes['ID']
 
-          track_details = xml.root.elements['TrackInfo'].get_elements('TrackDetail')
-          unless track_details.empty?
-            shipment_events = track_details.map do |track_detail|
-              name = track_detail.get_text('Event').to_s
-              if (time = track_detail.get_text('EventTime')) && 
-                (date = track_detail.get_text('EventDate'))
-                
-                event_time = Time.parse("#{date} #{time}")
+              track_details = i.get_elements('TrackDetail')
+              unless track_details.empty?
+                shipment_events = track_details.map do |track_detail|
+                  name = track_detail.get_text('Event').to_s
+                  if (time = track_detail.get_text('EventTime')) && 
+                    (date = track_detail.get_text('EventDate'))
+                    
+                    event_time = Time.parse("#{date} #{time}")
+                  end
+
+                  location = Location.new(
+                    :city => node_string_or_nil(track_detail.elements['EventCity']),
+                    :state => node_string_or_nil(track_detail.elements['EventState']),
+                    :postal_code => node_string_or_nil(track_detail.elements['EventZIPCode']),
+                    :country => node_string_or_nil(track_detail.elements['EventCountry'])
+                  )
+                  
+                  ShipmentEvent.new(name, event_time, location)
+                  
+                end
               end
-
-              location = Location.new(
-                :city => node_string_or_nil(track_detail.elements['EventCity']),
-                :state => node_string_or_nil(track_detail.elements['EventState']),
-                :postal_code => node_string_or_nil(track_detail.elements['EventZIPCode']),
-                :country => node_string_or_nil(track_detail.elements['EventCountry'])
+              TrackingResponse.new(success, response_message(xml), 
+                Hash.from_xml(response).values.first,
+                :xml => response,
+                :request => last_request,
+                :shipment_events => shipment_events,
+                :tracking_number => tracking_number
               )
-              
-              ShipmentEvent.new(name, event_time, location)
             end
           end
         end
-
-        TrackingResponse.new(success, response_message(xml), Hash.from_xml(response).values.first,
-          :xml => response,
-          :request => last_request,
-          :shipment_events => shipment_events,
-          :tracking_number => tracking_number
-        )
       end
+
+        
 
       def response_success?(xml)
         xml.elements['/Error'].nil?
