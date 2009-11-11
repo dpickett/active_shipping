@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{active_shipping}
-  s.version = "0.0.1"
+  s.version = "0.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["James MacAulay", "Tobias Luetke", "Cody Fauser", "Jimmy Baker"]
-  s.date = %q{2009-10-26}
+  s.date = %q{2009-11-11}
   s.description = %q{Shipping API extension for Active Merchant.}
   s.email = %q{jmacaulay@gmail.com}
   s.extra_rdoc_files = [
@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
      "README.markdown",
      "Rakefile",
      "VERSION",
+     "active_shipping.gemspec",
      "init.rb",
      "lib/active_shipping.rb",
      "lib/active_shipping/lib/connection.rb",
@@ -83,6 +84,8 @@ Gem::Specification.new do |s|
      "test/fixtures/xml/usps/beverly_hills_to_ottawa_book_rate_response.xml",
      "test/fixtures/xml/usps/beverly_hills_to_ottawa_book_wii_rate_response.xml",
      "test/fixtures/xml/usps/beverly_hills_to_ottawa_wii_rate_response.xml",
+     "test/fixtures/xml/usps/example_tracking_response.xml",
+     "test/fixtures/xml/usps/multi_tracking_example.xml",
      "test/remote/fedex_test.rb",
      "test/remote/shipwire_test.rb",
      "test/remote/ups_test.rb",
