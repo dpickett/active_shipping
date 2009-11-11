@@ -290,23 +290,14 @@ module ActiveMerchant
               track_details = i.get_elements('TrackDetail')
               unless track_details.empty?
                 shipment_events = track_details.map do |track_detail|
-                  name = track_detail.get_text('Event').to_s
-                  if (time = track_detail.get_text('EventTime')) && 
-                    (date = track_detail.get_text('EventDate'))
-                    
-                    event_time = Time.parse("#{date} #{time}")
-                  end
-
-                  location = Location.new(
-                    :city => node_string_or_nil(track_detail.elements['EventCity']),
-                    :state => node_string_or_nil(track_detail.elements['EventState']),
-                    :postal_code => node_string_or_nil(track_detail.elements['EventZIPCode']),
-                    :country => node_string_or_nil(track_detail.elements['EventCountry'])
-                  )
-                  
-                  ShipmentEvent.new(name, event_time, location)
-                  
+                  parse_shipment_event(track_detail)                 
                 end
+              end
+
+              track_summary = i.get_elements('TrackSummary')[0]
+              unless track_summary.nil?
+                shipment_events ||= []
+                shipment_events << parse_shipment_event(track_summary)
               end
               TrackingResponse.new(success, response_message(xml), 
                 Hash.from_xml(response).values.first,
@@ -318,6 +309,24 @@ module ActiveMerchant
             end
           end
         end
+      end
+
+      def parse_shipment_event(track_detail)
+        name = track_detail.get_text('Event').to_s
+        if (time = track_detail.get_text('EventTime')) && 
+          (date = track_detail.get_text('EventDate'))
+          
+          event_time = Time.parse("#{date} #{time}")
+        end
+
+        location = Location.new(
+          :city => node_string_or_nil(track_detail.elements['EventCity']),
+          :state => node_string_or_nil(track_detail.elements['EventState']),
+          :postal_code => node_string_or_nil(track_detail.elements['EventZIPCode']),
+          :country => node_string_or_nil(track_detail.elements['EventCountry'])
+        )
+        
+        ShipmentEvent.new(name, event_time, location)
       end
 
         

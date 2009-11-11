@@ -24,29 +24,29 @@ class USPSTest < Test::Unit::TestCase
   def test_find_tracking_info_should_return_a_tracking_response
     @carrier.expects(:commit).returns(xml_fixture('usps/example_tracking_response'))
     assert_instance_of ActiveMerchant::Shipping::TrackingResponse, 
-      @carrier.find_tracking_info(['EJ958083578US'], :test => true)
+      @carrier.find_tracking_info(['EJ958083578US'], :test => true)[0]
   end
 
   def test_find_tracking_info_should_return_a_tracking_number
     @carrier.expects(:commit).returns(xml_fixture('usps/example_tracking_response'))
-    info = @carrier.find_tracking_info(['EJ958083578US'], :test => true)
+    info = @carrier.find_tracking_info(['EJ958083578US'], :test => true)[0]
     
     assert_equal 'EJ958083578US', info.tracking_number
   end
 
   def test_find_tracking_info_should_return_correct_number_of_shipment_events
     @carrier.expects(:commit).returns(xml_fixture('usps/example_tracking_response'))
-    info = @carrier.find_tracking_info(['EJ958083578US'], :test => true)
+    info = @carrier.find_tracking_info(['EJ958083578US'], :test => true)[0]
 
-    assert_equal 3, info.shipment_events.size
+    assert_equal 4, info.shipment_events.size
   end
 
   def test_find_tracking_info_should_return_proper_order
     @carrier.expects(:commit).returns(xml_fixture('usps/example_tracking_response'))
-    info = @carrier.find_tracking_info(['EJ958083578US'], :test => true)
+    info = @carrier.find_tracking_info(['EJ958083578US'], :test => true)[0]
 
     assert_equal "NOTICE LEFT", info.shipment_events.first.name
-    assert_equal "ACCEPTANCE", info.shipment_events.last.name
+    assert_equal "DELIVERED", info.shipment_events.last.name
   end
 
   def test_find_multiple_returns_two_seperate_tracking_responses
