@@ -45,6 +45,13 @@ require 'active_shipping/shipping/tracking_response'
 require 'active_shipping/shipping/package'
 require 'active_shipping/shipping/location'
 require 'active_shipping/shipping/rate_estimate'
+
+require 'active_shipping/shipping/contact'
+require 'active_shipping/shipping/party'
+require 'active_shipping/shipping/label'
+require 'active_shipping/shipping/shipment'
+
 require 'active_shipping/shipping/shipment_event'
 require 'active_shipping/shipping/carrier'
 require 'active_shipping/shipping/carriers'
+

@@ -1,9 +1,13 @@
 #!/usr/bin/env ruby
 $:.unshift(File.dirname(__FILE__) + '/../lib')
+$:.unshift(File.dirname(__FILE__))
 
 require 'test/unit'
 require 'active_shipping'
 require 'mocha'
+
+require 'shipment_factory'
+require 'party_factory'
 
 module Test
   module Unit
