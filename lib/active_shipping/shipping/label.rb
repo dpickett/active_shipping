@@ -16,6 +16,7 @@ module ActiveMerchant
 
       attr_accessor :format_type
       attr_accessor :image_type
+      attr_accessor :image
 
       def initialize(attrs = {})
         attrs.each do |key, value|

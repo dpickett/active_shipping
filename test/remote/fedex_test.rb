@@ -138,6 +138,14 @@ class FedExTest < Test::Unit::TestCase
     shipment.shipper.account_number = fixtures(:fedex)[:account]
     shipment.payor_account_number = fixtures(:fedex)[:account]
     shipment.payor_account_country = 'US'
+    shipment.label.image_type = 'PDF'
     @carrier.get_return_label(shipment, :test => true)   
+    assert_not_nil shipment.label.image
+    assert_not_nil shipment.tracking_number
+  end
+
+  def test_address_validation
+    party = PartyFactory.build
+    @carrier.validate_location(party.location, :test => true)
   end
 end

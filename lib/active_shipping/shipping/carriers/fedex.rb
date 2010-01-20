@@ -111,6 +111,13 @@ module ActiveMerchant
         req = build_return_label_request(shipment)
         response = commit(save_request(req), (options[:test] || false)).gsub(/<(\/)?.*?\:(.*?)>/, '<\1\2>')
 
+        parse_return_label_response(response, shipment)
+      end
+
+      def validate_location(location, options = {})
+        req = build_location_validation_request(location)
+        response = commit(save_request(req), (options[:test] || false)).gsub(/<(\/)?.*?\:(.*?)>/, '<\1\2>')
+
         require 'ruby-debug'
         debugger
 
@@ -118,6 +125,35 @@ module ActiveMerchant
       end
 
       protected
+      def build_location_validation_request(location)
+        xml_request = XmlNode.new('AddressValidationRequest',
+          'xmlns' => 'http://fedex.com/ws/addressvalidation/v2') do |root_node|
+
+          root_node << build_request_header
+          root_node << XmlNode.new('RequestTimestamp', Time.now)
+          root_node << build_party_location_node('AddressToValidate', location)
+        end
+
+        xml_request.to_s
+      end
+
+      def parse_return_label_response(response, shipment)
+        xml = REXML::Document.new(response)
+        success = response_success?(xml)
+        message = response_message(xml)
+        
+        if success
+          parent = xml.elements.first
+          shipment.label.image = Base64.decode64(parent.elements['//Image'][0].to_s)
+          shipment.tracking_number = parent.elements['//TrackingNumber'][0].to_s
+          shipment.transit_time = parent.elements['//TransitTime'][0].to_s
+          
+          shipment
+        else
+          message
+        end
+      end
+
       def build_return_label_request(shipment)
         xml_request = XmlNode.new('ProcessShipmentRequest', 
           'xmlns' => 'http://fedex.com/ws/ship/v7') do |root_node|
@@ -166,8 +202,9 @@ module ActiveMerchant
 
             rs << XmlNode.new('LabelSpecification') do |spec|
               spec << XmlNode.new('LabelFormatType', 
-                shipment.label.format_type || 'LABEL_DATA_ONLY')
+                shipment.label.format_type || 'COMMON2D')
               spec << XmlNode.new('ImageType', shipment.label.image_type)
+              spec << XmlNode.new('LabelStockType', 'PAPER_4X6')
             end
             rs << XmlNode.new('RateRequestTypes', shipment.rate_request_type)
             rs << XmlNode.new('PackageCount', shipment.package_count)
@@ -298,19 +335,30 @@ module ActiveMerchant
             end
           end
 
+          
           if party.location
-            xml_node << XmlNode.new('Address') do |a|
-              if party.location.address1
-                a << XmlNode.new('StreetLines', party.location.address1) 
-              end
-              a << XmlNode.new('City', party.location.city)
-              a << XmlNode.new('StateOrProvinceCode', party.location.state)
-              a << XmlNode.new('PostalCode', party.location.zip)
-              a << XmlNode.new('CountryCode', party.location.country.code(:alpha2))
-            end
+            xml_node << build_party_location_node('Address', party.location)
           end
         end
       end
+
+      def build_party_location_node(name, location)
+        XmlNode.new(name) do |a|
+          if location.address1
+            a << XmlNode.new('StreetLines', location.address1) 
+          end
+
+          if location.address2
+            a << XmlNode.new('StreetLines', location.address2)
+          end
+
+          a << XmlNode.new('City', location.city)
+          a << XmlNode.new('StateOrProvinceCode', location.state)
+          a << XmlNode.new('PostalCode', location.zip)
+          a << XmlNode.new('CountryCode', location.country.code(:alpha2))
+        end
+      end
+
       def build_location_node(name, location)
         location_node = XmlNode.new(name) do |xml_node|
           xml_node << XmlNode.new('Address') do |address_node|

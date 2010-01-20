@@ -41,6 +41,10 @@ module ActiveMerchant
       attr_accessor :total_weight_units
       attr_accessor :payor_country
       attr_accessor :payor_account_number
+
+      attr_accessor :tracking_number
+      attr_accessor :transit_time
+
       attr_reader :payor_account_country
 
       def initialize(attrs = {})
@@ -48,7 +52,7 @@ module ActiveMerchant
           self.send("#{key}=", value) if self.respond_to?("#{key}=")
         end
 
-        self.label ||= Label.new(:format_type => 'LABEL_DATA_ONLY')
+        self.label ||= Label.new(:format_type => 'COMMON2D')
         self.requested_packages ||= 1
         self.dropoff_type ||= 'REGULAR_PICKUP' 
         self.service ||= 'FEDEX_GROUND'
