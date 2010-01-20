@@ -6,6 +6,14 @@ module ActiveMerchant
         'LABEL_DATA_ONLY'
       ]
 
+      FEDEX_IMAGE_TYPES = [
+        'DPL',
+        'EPL2',
+        'PDF',
+        'PNG',
+        'ZPLII'
+      ]
+
       attr_accessor :format_type
       attr_accessor :image_type
 
@@ -13,6 +21,8 @@ module ActiveMerchant
         attrs.each do |key, value|
           self.send("#{key}=", value) if self.respond_to?("#{key}=")
         end
+
+        self.image_type ||= 'PNG'
       end
 
     end

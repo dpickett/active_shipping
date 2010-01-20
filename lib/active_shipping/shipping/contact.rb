@@ -2,6 +2,7 @@ module ActiveMerchant
   module Shipping
     class Contact
       attr_accessor :name
+      attr_accessor :title
       attr_accessor :company_name
       attr_accessor :phone_number
       attr_accessor :fax_number

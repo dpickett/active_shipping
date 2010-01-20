@@ -49,7 +49,9 @@ require 'active_shipping/shipping/rate_estimate'
 require 'active_shipping/shipping/contact'
 require 'active_shipping/shipping/party'
 require 'active_shipping/shipping/label'
+
 require 'active_shipping/shipping/shipment'
+require 'active_shipping/shipping/return_shipment'
 
 require 'active_shipping/shipping/shipment_event'
 require 'active_shipping/shipping/carrier'

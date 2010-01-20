@@ -106,8 +106,84 @@ module ActiveMerchant
         response = commit(save_request(tracking_request), (options[:test] || false)).gsub(/<(\/)?.*?\:(.*?)>/, '<\1\2>')
         parse_tracking_response(response, options)
       end
-      
+
+      def get_return_label(shipment, options = {})
+        req = build_return_label_request(shipment)
+        response = commit(save_request(req), (options[:test] || false)).gsub(/<(\/)?.*?\:(.*?)>/, '<\1\2>')
+
+        require 'ruby-debug'
+        debugger
+
+        response
+      end
+
       protected
+      def build_return_label_request(shipment)
+        xml_request = XmlNode.new('ProcessShipmentRequest', 
+          'xmlns' => 'http://fedex.com/ws/ship/v7') do |root_node|
+          root_node << build_request_header
+          root_node << XmlNode.new('Version') do |version_node|
+            version_node << XmlNode.new('ServiceId', 'ship')
+            version_node << XmlNode.new('Major', '7')
+            version_node << XmlNode.new('Intermediate', '0')
+            version_node << XmlNode.new('Minor', '0')
+          end
+          
+          root_node << XmlNode.new('RequestedShipment') do |rs|
+            rs << XmlNode.new('ShipTimestamp', shipment.ship_at || Time.now)
+            rs << XmlNode.new('DropoffType', shipment.dropoff_type)
+            rs << XmlNode.new('ServiceType', shipment.service)
+            rs << XmlNode.new('PackagingType', shipment.packaging_type)
+            rs << XmlNode.new('TotalWeight') do |t|
+              t << XmlNode.new('Units', shipment.total_weight_units)
+              t << XmlNode.new('Value', shipment.total_weight_value)
+            end
+            if shipment.total_insured_amount
+              rs << XmlNode.new('TotalInsuredValue') do |ins|
+                ins << XmlNode.new('Currency', shipment.total_insured_currency)
+                ins << XmlNode.new('Amount', shipment.total_insured_amount)
+              end
+            end
+            rs << build_party_node('Shipper', shipment.shipper)
+            rs << build_party_node('Recipient', shipment.recipient)
+            rs << XmlNode.new('ShippingChargesPayment') do |payment|
+              payment << XmlNode.new('PaymentType', shipment.payment_type)
+              payment << XmlNode.new('Payor') do |payor|
+                payor << XmlNode.new('AccountNumber', shipment.payor_account_number)
+                payor << XmlNode.new('CountryCode', shipment.payor_account_country.code(:alpha2))
+              end 
+            end
+
+            rs << XmlNode.new('SpecialServicesRequested') do |s|
+              s << XmlNode.new('SpecialServiceTypes', 'RETURN_SHIPMENT')
+              s << XmlNode.new('ReturnShipmentDetail') do |d| 
+                d << XmlNode.new('ReturnType', shipment.return_type)
+                d << XmlNode.new('Rma') do |rma|
+                  rma << XmlNode.new('Number', shipment.rma_number)
+                end
+              end
+            end
+
+            rs << XmlNode.new('LabelSpecification') do |spec|
+              spec << XmlNode.new('LabelFormatType', 
+                shipment.label.format_type || 'LABEL_DATA_ONLY')
+              spec << XmlNode.new('ImageType', shipment.label.image_type)
+            end
+            rs << XmlNode.new('RateRequestTypes', shipment.rate_request_type)
+            rs << XmlNode.new('PackageCount', shipment.package_count)
+            rs << XmlNode.new('PackageDetail', 'PACKAGE_SUMMARY')
+            (1..shipment.package_count).each do |package_index|
+              rs << XmlNode.new('RequestedPackageLineItems') do |p|
+                p << XmlNode.new('SequenceNumber', package_index)
+              end 
+            end
+          end
+        end
+
+        xml_request.to_s
+      end
+
+
       def build_rate_request(origin, destination, packages, options={})
         imperial = ['US','LR','MM'].include?(origin.country_code(:alpha2))
 
@@ -205,6 +281,36 @@ module ActiveMerchant
         [web_authentication_detail, client_detail, trasaction_detail]
       end
             
+      def build_party_node(name, party)
+        XmlNode.new(name) do |xml_node|
+          if party.account_number
+            xml_node << XmlNode.new('AccountNumber', party.account_number)
+          end
+
+          if party.contact
+            xml_node << XmlNode.new('Contact') do |c|
+              c << XmlNode.new('PersonName', party.contact.name)
+              c << XmlNode.new('Title', party.contact.title)
+              c << XmlNode.new('CompanyName', party.contact.company_name)
+              c << XmlNode.new('PhoneNumber', party.contact.phone_number)
+              c << XmlNode.new('FaxNumber', party.contact.fax_number)
+              c << XmlNode.new('EMailAddress', party.contact.email_address)
+            end
+          end
+
+          if party.location
+            xml_node << XmlNode.new('Address') do |a|
+              if party.location.address1
+                a << XmlNode.new('StreetLines', party.location.address1) 
+              end
+              a << XmlNode.new('City', party.location.city)
+              a << XmlNode.new('StateOrProvinceCode', party.location.state)
+              a << XmlNode.new('PostalCode', party.location.zip)
+              a << XmlNode.new('CountryCode', party.location.country.code(:alpha2))
+            end
+          end
+        end
+      end
       def build_location_node(name, location)
         location_node = XmlNode.new(name) do |xml_node|
           xml_node << XmlNode.new('Address') do |address_node|

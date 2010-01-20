@@ -6,7 +6,7 @@ class FedExTest < Test::Unit::TestCase
     @packages  = TestFixtures.packages
     @locations = TestFixtures.locations
     @carrier   = FedEx.new(fixtures(:fedex).merge(:test => true))
-    FedEx.logger = Logger.new('/Users/james/.active_merchant/fedex.log')
+    #FedEx.logger = Logger.new('/Users/james/.active_merchant/fedex.log')
   end
     
   def test_valid_credentials
@@ -133,4 +133,11 @@ class FedExTest < Test::Unit::TestCase
     end
   end
   
+  def test_return_label
+    shipment = ShipmentFactory.build
+    shipment.shipper.account_number = fixtures(:fedex)[:account]
+    shipment.payor_account_number = fixtures(:fedex)[:account]
+    shipment.payor_account_country = 'US'
+    @carrier.get_return_label(shipment, :test => true)   
+  end
 end

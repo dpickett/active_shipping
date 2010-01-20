@@ -24,6 +24,6 @@ class PartyFactory
       :account_number => '5555555'
     }
 
-    Party.new(default_attrs)
+    Party.new(default_attrs.merge(attrs))
   end
 end
