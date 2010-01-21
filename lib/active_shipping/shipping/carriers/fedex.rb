@@ -130,8 +130,18 @@ module ActiveMerchant
           'xmlns' => 'http://fedex.com/ws/addressvalidation/v2') do |root_node|
 
           root_node << build_request_header
+          root_node << XmlNode.new('Version') do |version_node|
+            version_node << XmlNode.new('ServiceId', 'aval')
+            version_node << XmlNode.new('Major', '2')
+            version_node << XmlNode.new('Intermediate', '0')
+            version_node << XmlNode.new('Minor', '0')
+          end
+
           root_node << XmlNode.new('RequestTimestamp', Time.now)
-          root_node << build_party_location_node('AddressToValidate', location)
+          root_node << XmlNode.new('Options', '')
+          root_node << XmlNode.new('AddressesToValidate') do |v|
+            v << build_party_location_node('Address', location)
+          end
         end
 
         xml_request.to_s
