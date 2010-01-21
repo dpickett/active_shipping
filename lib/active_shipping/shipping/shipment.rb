@@ -39,7 +39,6 @@ module ActiveMerchant
       attr_accessor :package_count
       attr_accessor :total_weight_value
       attr_accessor :total_weight_units
-      attr_accessor :payor_country
       attr_accessor :payor_account_number
 
       attr_accessor :tracking_number
