@@ -19,6 +19,9 @@ module ActiveMerchant #:nodoc:
       alias_method :state, :province
       alias_method :territory, :province
       alias_method :region, :province
+
+      attr_accessor :valid
+      attr_accessor :score
       
       def initialize(options = {})
         @country = (options[:country].nil? or options[:country].is_a?(ActiveMerchant::Country)) ?

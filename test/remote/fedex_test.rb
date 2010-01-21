@@ -147,5 +147,14 @@ class FedExTest < Test::Unit::TestCase
   def test_address_validation
     party = PartyFactory.build
     @carrier.validate_location(party.location, :test => true)
+    assert party.location.valid
+    assert_equal 100, party.location.score 
+  end
+
+  def test_address_validation_with_bunk_address
+    party = PartyFactory.build
+    party.location.stubs(:address1).returns('44 Foeawrfsadfasd Street')
+    @carrier.validate_location(party.location, :test => true)
+    assert !party.location.valid
   end
 end

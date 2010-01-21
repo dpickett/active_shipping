@@ -118,9 +118,7 @@ module ActiveMerchant
         req = build_location_validation_request(location)
         response = commit(save_request(req), (options[:test] || false)).gsub(/<(\/)?.*?\:(.*?)>/, '<\1\2>')
 
-        require 'ruby-debug'
-        debugger
-
+        parse_location_validation_request(response, location)
         response
       end
 
@@ -145,6 +143,22 @@ module ActiveMerchant
         end
 
         xml_request.to_s
+      end
+
+      def parse_location_validation_request(response, location)
+        xml = REXML::Document.new(response)
+        success = response_success?(xml)
+        message = response_message(xml)
+
+        if success
+          parent = xml.elements.first
+          location.valid = parent.elements['//DeliveryPointValidation'][0] == 'CONFIRMED'
+          location.score = parent.elements['//Score'][0].to_s.to_i
+        else
+          location.valid = false
+          location.score = 0
+          message
+        end
       end
 
       def parse_return_label_response(response, shipment)
