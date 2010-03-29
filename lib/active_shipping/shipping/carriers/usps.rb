@@ -316,7 +316,7 @@ module ActiveMerchant
         if (time = track_detail.get_text('EventTime')) && 
           (date = track_detail.get_text('EventDate'))
           
-          event_time = Time.parse("#{date} #{time}")
+          event_time = Time.parse("#{date} #{time} EST")
         end
 
         location = Location.new(

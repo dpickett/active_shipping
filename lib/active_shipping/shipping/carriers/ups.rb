@@ -314,7 +314,7 @@ module ActiveMerchant
                 time, date = time.to_s, date.to_s
                 hour, minute, second = time.scan(/\d{2}/)
                 year, month, day = date[0..3], date[4..5], date[6..7]
-                Time.utc(year, month, day, hour, minute, second)
+                Time.parse("#{date} {time} EST")
               end
               location = location_from_address_node(activity.elements['ActivityLocation/Address'])
               ShipmentEvent.new(description, zoneless_time, location)
