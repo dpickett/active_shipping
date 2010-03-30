@@ -119,7 +119,6 @@ module ActiveMerchant
         response = commit(save_request(req), (options[:test] || false)).gsub(/<(\/)?.*?\:(.*?)>/, '<\1\2>')
 
         parse_location_validation_request(response, location)
-        response
       end
 
       protected
@@ -159,6 +158,11 @@ module ActiveMerchant
           location.score = 0
           message
         end
+        LocationResponse.new(success, message, Hash.from_xml(response),
+          :xml => response,
+          :request => last_request,
+          :location => location
+        )
       end
 
       def parse_return_label_response(response, shipment)
@@ -173,9 +177,12 @@ module ActiveMerchant
           shipment.transit_time = parent.elements['//TransitTime'][0].to_s
           
           shipment
-        else
-          message
         end
+        ReturnLabelResponse.new(success, message, Hash.from_xml(response),
+          :xml => response,
+          :request => last_request,
+          :shipment => shipment
+        )
       end
 
       def build_return_label_request(shipment)

@@ -49,7 +49,3 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README', 'CHANGELOG')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
-
-task :install => [:package] do
-  `gem install pkg/#{PKG_FILE_NAME}.gem`
-end

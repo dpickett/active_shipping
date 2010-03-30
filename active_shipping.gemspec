@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{active_shipping}
-  s.version = "0.1.1"
+  s.version = "0.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["James MacAulay", "Tobias Luetke", "Cody Fauser", "Jimmy Baker"]
-  s.date = %q{2010-01-21}
+  s.date = %q{2010-03-30}
   s.description = %q{Shipping API extension for Active Merchant.}
   s.email = %q{jmacaulay@gmail.com}
   s.extra_rdoc_files = [
@@ -44,11 +44,13 @@ Gem::Specification.new do |s|
      "lib/active_shipping/shipping/contact.rb",
      "lib/active_shipping/shipping/label.rb",
      "lib/active_shipping/shipping/location.rb",
+     "lib/active_shipping/shipping/location_response.rb",
      "lib/active_shipping/shipping/package.rb",
      "lib/active_shipping/shipping/party.rb",
      "lib/active_shipping/shipping/rate_estimate.rb",
      "lib/active_shipping/shipping/rate_response.rb",
      "lib/active_shipping/shipping/response.rb",
+     "lib/active_shipping/shipping/return_label_response.rb",
      "lib/active_shipping/shipping/return_shipment.rb",
      "lib/active_shipping/shipping/shipment.rb",
      "lib/active_shipping/shipping/shipment_event.rb",
@@ -112,7 +114,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/Shopify/active_shipping}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{Shipping API extension for Active Merchant.}
   s.test_files = [
     "test/party_factory.rb",
