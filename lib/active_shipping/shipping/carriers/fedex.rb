@@ -446,8 +446,9 @@ module ActiveMerchant
           tracking_number = tracking_details.get_text('TrackingNumber').to_s
           
           destination_node = tracking_details.elements['DestinationAddress']
+          
           destination = Location.new(
-                :country =>     destination_node.get_text('CountryCode').to_s,
+                :country =>     destination_node.get_text('CountryCode').to_s.blank? ? 'US' : destination_node.get_text('CountryCode').to_s,
                 :province =>    destination_node.get_text('StateOrProvinceCode').to_s,
                 :city =>        destination_node.get_text('City').to_s
               )
@@ -457,7 +458,7 @@ module ActiveMerchant
               :city => event.elements['Address'].get_text('City').to_s,
               :state => event.elements['Address'].get_text('StateOrProvinceCode').to_s,
               :postal_code => event.elements['Address'].get_text('PostalCode').to_s,
-              :country => event.elements['Address'].get_text('CountryCode').to_s)
+              :country => event.elements['Address'].get_text('CountryCode').to_s.blank? ? 'US' : destination_node.get_text('CountryCode').to_s)
             description = event.get_text('EventDescription').to_s
             
             time = Time.parse(event.get_text('Timestamp').to_s)
