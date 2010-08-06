@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{active_shipping}
-  s.version = "0.1.4"
+  s.version = "0.1.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["James MacAulay", "Tobias Luetke", "Cody Fauser", "Jimmy Baker"]
-  s.date = %q{2010-04-20}
+  s.date = %q{2010-08-06}
   s.description = %q{Shipping API extension for Active Merchant.}
   s.email = %q{jmacaulay@gmail.com}
   s.extra_rdoc_files = [
@@ -76,6 +76,7 @@ Gem::Specification.new do |s|
      "lib/vendor/xml_node/test/test_generating.rb",
      "lib/vendor/xml_node/test/test_parsing.rb",
      "test/fixtures.example.yml",
+     "test/fixtures/xml/fedex/actual_delivery_address_tracking_response.xml",
      "test/fixtures/xml/fedex/ottawa_to_beverly_hills_rate_request.xml",
      "test/fixtures/xml/fedex/ottawa_to_beverly_hills_rate_response.xml",
      "test/fixtures/xml/fedex/tracking_request.xml",
@@ -114,7 +115,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/Shopify/active_shipping}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.6}
+  s.rubygems_version = %q{1.3.7}
   s.summary = %q{Shipping API extension for Active Merchant.}
   s.test_files = [
     "test/party_factory.rb",
@@ -140,7 +141,7 @@ Gem::Specification.new do |s|
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<activesupport>, [">= 0"])
     else
       s.add_dependency(%q<activesupport>, [">= 0"])
