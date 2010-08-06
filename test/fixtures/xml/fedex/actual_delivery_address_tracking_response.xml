@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TrackReply>
+  <HighestSeverity>SUCCESS</HighestSeverity>
+  <Notifications>
+    <Severity>SUCCESS</Severity>
+    <Source>trck</Source>
+    <Code>0</Code>
+    <Message>Request was successfully processed.</Message>
+    <LocalizedMessage>Request was successfully processed.</LocalizedMessage>
+  </Notifications>
+  <TransactionDetail>
+    <CustomerTransactionId>ActiveShipping</CustomerTransactionId>
+  </TransactionDetail>
+  <Version>
+    <ServiceId>trck</ServiceId>
+    <Major>3</Major>
+    <Intermediate>0</Intermediate>
+    <Minor>0</Minor>
+  </Version>
+  <DuplicateWaybill>false</DuplicateWaybill>
+  <MoreData>false</MoreData>
+  <TrackDetails>
+    <TrackingNumber>897895815142346</TrackingNumber>
+    <TrackingNumberUniqueIdentifier>12010~897895815142346</TrackingNumberUniqueIdentifier>
+    <StatusCode>DL</StatusCode>
+    <StatusDescription>Delivered</StatusDescription>
+    <CarrierCode>FDXG</CarrierCode>
+    <ServiceInfo>FedEx Ground-Print Return Label-U.S.</ServiceInfo>
+    <ServiceType>FEDEX_GROUND</ServiceType>
+    <PackageWeight>
+      <Units>LB</Units>
+      <Value>23.0</Value>
+    </PackageWeight>
+    <Packaging>Package</Packaging>
+    <PackageSequenceNumber>1</PackageSequenceNumber>
+    <PackageCount>1</PackageCount>
+    <OriginLocationAddress>
+      <City>DOVER</City>
+      <StateOrProvinceCode>NJ</StateOrProvinceCode>
+      <CountryCode>US</CountryCode>
+      <Residential>false</Residential>
+    </OriginLocationAddress>
+    
+    <ShipTimestamp>2010-08-02</ShipTimestamp>
+    <ActualDeliveryTimestamp>2010-08-03T</ActualDeliveryTimestamp>
+    <ActualDeliveryAddress>
+      <City>Allston</City>
+      <StateOrProvinceCode>MA</StateOrProvinceCode>
+      <CountryCode>US</CountryCode>
+      <Residential>false</Residential></ActualDeliveryAddress><DeliverySignatureName>TAYLOR</DeliverySignatureName>
+    <SignatureProofOfDeliveryAvailable>true</SignatureProofOfDeliveryAvailable>
+    <ProofOfDeliveryNotificationsAvailable>true</ProofOfDeliveryNotificationsAvailable>
+    <ExceptionNotificationsAvailable>false</ExceptionNotificationsAvailable>
+    <Events>
+      <Timestamp>2010-08-03</Timestamp>
+      <EventType>DL</EventType>
+      <EventDescription>Delivered</EventDescription>
+      <Address>
+        <City>Allston</City>
+        <StateOrProvinceCode>MA</StateOrProvinceCode>
+        <PostalCode>02134</PostalCode>
+        <CountryCode>US</CountryCode>
+        <Residential>false</Residential>
+      </Address>
+    </Events><Events>
+      <Timestamp>2010-08-03</Timestamp>
+      <EventType>OD</EventType>
+      <EventDescription>On FedEx vehicle for delivery</EventDescription>
+      <Address>
+        <City>WILMINGTON</City>
+        <StateOrProvinceCode>MA</StateOrProvinceCode>
+        <PostalCode>01887</PostalCode>
+        <CountryCode>US</CountryCode>
+        <Residential>false</Residential>
+      </Address>
+    </Events>
+    <Events>
+      <Timestamp>2010-08-03</Timestamp>
+      <EventType>AR</EventType>
+      <EventDescription>At local FedEx facility</EventDescription>
+      <Address>
+        <City>WILMINGTON</City>
+        <StateOrProvinceCode>MA</StateOrProvinceCode>
+        <PostalCode>01887</PostalCode>
+        <CountryCode>US</CountryCode>
+        <Residential>false</Residential>
+      </Address>
+    </Events>
+    <Events>
+      <Timestamp>2010-08-03</Timestamp>
+      <EventType>DP</EventType>
+      <EventDescription>Departed FedEx location</EventDescription>
+      <Address>
+        <City>WILLINGTON</City>
+        <StateOrProvinceCode>CT</StateOrProvinceCode>
+        <PostalCode>06279</PostalCode>
+        <CountryCode>US</CountryCode>
+        <Residential>false</Residential>
+      </Address>
+    </Events>
+    <Events>
+      <Timestamp>2010-08-03</Timestamp>
+      <EventType>AR</EventType>
+      <EventDescription>Arrived at FedEx location</EventDescription>
+      <Address>
+        <City>WILLINGTON</City>
+        <StateOrProvinceCode>CT</StateOrProvinceCode>
+        <PostalCode>06279</PostalCode>
+        <CountryCode>US</CountryCode>
+        <Residential>false</Residential>
+      </Address>
+    </Events>
+    <Events>
+      <Timestamp>2010-08-02</Timestamp>
+      <EventType>AR</EventType>
+      <EventDescription>Arrived at FedEx location</EventDescription>
+      <Address>
+        <City>DOVER</City>
+        <StateOrProvinceCode>NJ</StateOrProvinceCode>
+        <PostalCode>07801</PostalCode>
+        <CountryCode>US</CountryCode>
+        <Residential>false</Residential>
+      </Address>
+    </Events>
+    <Events>
+      <Timestamp>2010-08-02</Timestamp>
+      <EventType>PU</EventType>
+      <EventDescription>Picked up</EventDescription>
+      <Address>
+        <City>DOVER</City>
+        <StateOrProvinceCode>NJ</StateOrProvinceCode>
+        <PostalCode>07801</PostalCode>
+        <CountryCode>US</CountryCode>
+        <Residential>false</Residential>
+      </Address>
+    </Events>
+  </TrackDetails>
+</TrackReply>

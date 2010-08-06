@@ -445,13 +445,15 @@ module ActiveMerchant
           tracking_details = root_node.elements['TrackDetails']
           tracking_number = tracking_details.get_text('TrackingNumber').to_s
           
-          destination_node = tracking_details.elements['DestinationAddress']
+          destination_node = tracking_details.elements['DestinationAddress'] || tracking_details.elements['ActualDeliveryAddress']
           
-          destination = Location.new(
-                :country =>     destination_node.get_text('CountryCode').to_s.blank? ? 'US' : destination_node.get_text('CountryCode').to_s,
-                :province =>    destination_node.get_text('StateOrProvinceCode').to_s,
-                :city =>        destination_node.get_text('City').to_s
-              )
+          if destination_node
+            destination = Location.new(
+                  :country =>     destination_node.get_text('CountryCode').to_s.blank? ? 'US' : destination_node.get_text('CountryCode').to_s,
+                  :province =>    destination_node.get_text('StateOrProvinceCode').to_s,
+                  :city =>        destination_node.get_text('City').to_s
+                )
+          end
           
           tracking_details.elements.each('Events') do |event|
             location = Location.new(
