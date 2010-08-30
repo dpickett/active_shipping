@@ -460,7 +460,7 @@ module ActiveMerchant
               :city => event.elements['Address'].get_text('City').to_s,
               :state => event.elements['Address'].get_text('StateOrProvinceCode').to_s,
               :postal_code => event.elements['Address'].get_text('PostalCode').to_s,
-              :country => event.elements['Address'].get_text('CountryCode').to_s.blank? ? 'US' : destination_node.get_text('CountryCode').to_s)
+              :country => event.elements['Address'].get_text('CountryCode').to_s.blank? ? 'US' : event.elements['Address'].get_text('CountryCode').to_s)
             description = event.get_text('EventDescription').to_s
             
             time = Time.parse(event.get_text('Timestamp').to_s)
