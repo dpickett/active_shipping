@@ -243,7 +243,13 @@ module ActiveMerchant
             (1..shipment.package_count).each do |package_index|
               rs << XmlNode.new('RequestedPackageLineItems') do |p|
                 p << XmlNode.new('SequenceNumber', package_index)
-              end 
+                # JDW: Assigning all the weight to the first item to get around a FedEx bug. Once FeEx fixes the bug
+                # it should be possible (and correct) to remove the Weight element entirely.
+                p << XmlNode.new('Weight') do |w|
+                  w << XmlNode.new('Units', shipment.total_weight_units)
+                  w << XmlNode.new('Value', package_index == 1 ? shipment.total_weight_value : 0)
+                end
+              end
             end
           end
         end
