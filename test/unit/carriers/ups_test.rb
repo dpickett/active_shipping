@@ -48,7 +48,7 @@ class UPSTest < Test::Unit::TestCase
                    "DEPARTURE SCAN",
                    "ARRIVAL SCAN",
                    "OUT FOR DELIVERY",
-                   "DELIVERED" ], response.shipment_events.map(&:name)
+                   "DELIVERED" ].sort, response.shipment_events.map(&:name).sort
   end
   
   def test_add_origin_and_destination_data_to_shipment_events_where_appropriate
